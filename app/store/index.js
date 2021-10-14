@@ -1,5 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+import userReducer from "./slices/userSlice";
+import bookmarkReducer from "./slices/bookmarkSlice";
 
-export default store = configureStore({
-  reducer: {},
+export default configureStore({
+  reducer: {
+    user: userReducer,
+    bookmark: bookmarkReducer,
+  },
 });

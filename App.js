@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text } from "react-native";
-import { Provider } from "react-redux";
+import {
+  Provider as StoreProvider,
+  useDispatch,
+  useSelector,
+} from "react-redux";
 import {
   configureFonts,
   DefaultTheme,
@@ -13,9 +17,13 @@ import {
   Manrope_600SemiBold,
 } from "@expo-google-fonts/manrope";
 
-import LoginScreen from "./app/screens/LoginScreen";
-import store from "./app/store";
-import VerificationScreen from "./app/screens/VerificationScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import AuthenticatedStack from "./app/Navigation/AuthenticatedStack";
+import * as firebase from "firebase";
+import { firebaseConfig } from "./app/config";
+import { login, logout } from "./app/store/slices/userSlice";
+import myStore from "./app/store";
+import LoginStack from "./app/Navigation/LoginStack";
 
 const fontConfig = {
   web: {
@@ -94,12 +102,16 @@ const App = () => {
   if (!fontsLoaded) return <AppLoading />;
 
   return (
-    <Provider store={store}>
-      <PaperProvider theme={theme}>
-        <LoginScreen />
-        {/* <VerificationScreen /> */}
-      </PaperProvider>
-    </Provider>
+    <>
+      <StoreProvider store={myStore}>
+        <PaperProvider theme={theme}>
+          <NavigationContainer>
+            <AuthenticatedStack />
+            {/* <LoginStack /> */}
+          </NavigationContainer>
+        </PaperProvider>
+      </StoreProvider>
+    </>
   );
 };
 
