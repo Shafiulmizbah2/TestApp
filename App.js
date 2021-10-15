@@ -1,10 +1,6 @@
 import React, { useEffect } from "react";
 import { View, Text } from "react-native";
-import {
-  Provider as StoreProvider,
-  useDispatch,
-  useSelector,
-} from "react-redux";
+
 import {
   configureFonts,
   DefaultTheme,
@@ -16,15 +12,10 @@ import {
   Manrope_400Regular,
   Manrope_600SemiBold,
 } from "@expo-google-fonts/manrope";
-
 import { NavigationContainer } from "@react-navigation/native";
 import AuthenticatedStack from "./app/Navigation/AuthenticatedStack";
-import * as firebase from "firebase";
 import { firebaseConfig } from "./app/config";
-import { login, logout } from "./app/store/slices/userSlice";
-import myStore from "./app/store";
-import LoginStack from "./app/Navigation/LoginStack";
-
+import firebase from "firebase/app";
 const fontConfig = {
   web: {
     regular: {
@@ -93,24 +84,22 @@ const theme = {
   fonts: configureFonts(fontConfig),
 };
 
-const App = () => {
+firebase.initializeApp(firebaseConfig);
+
+const App = ({ navigation }) => {
   let [fontsLoaded] = useFonts({
     Manrope_400Regular,
     Manrope_600SemiBold,
   });
-
   if (!fontsLoaded) return <AppLoading />;
 
   return (
     <>
-      <StoreProvider store={myStore}>
-        <PaperProvider theme={theme}>
-          <NavigationContainer>
-            <AuthenticatedStack />
-            {/* <LoginStack /> */}
-          </NavigationContainer>
-        </PaperProvider>
-      </StoreProvider>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <AuthenticatedStack />
+        </NavigationContainer>
+      </PaperProvider>
     </>
   );
 };

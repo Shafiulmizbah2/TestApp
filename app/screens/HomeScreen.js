@@ -12,6 +12,8 @@ import {
 } from "react-native-paper";
 import ArticleItem from "../components/ArticleItem";
 import axios from "axios";
+import firebase from "firebase";
+import { IsLoggedIn } from "../Service";
 
 const Container = styled(ScrollView)`
 flex;1;
@@ -28,7 +30,7 @@ const HeadLineContainer = styled(View)`
   padding-bottom: 20px;
 `;
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
   const [articles, setArticles] = useState([]);
 
   const getArticles = () => {
@@ -40,6 +42,8 @@ const HomeScreen = ({ navigation }) => {
       })
       .catch((error) => console.log(error));
   };
+
+  const AddToBookMark = () => {};
 
   useEffect(() => {
     getArticles();
@@ -53,7 +57,7 @@ const HomeScreen = ({ navigation }) => {
         <HeadLineContainer>
           <AppText variant="heading">Articles</AppText>
           <IconButton
-            icon="menu"
+            icon="text"
             size={25}
             onPress={() => navigation.navigate("Bookmark")}
           />
@@ -68,6 +72,9 @@ const HomeScreen = ({ navigation }) => {
         </HeadLineContainer>
         {articles?.map((article) => (
           <ArticleItem
+            key={article.title}
+            user={route}
+            navigation
             title={article.title}
             details={article.detail_news}
             like={article.view_count}

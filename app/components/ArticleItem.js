@@ -3,8 +3,10 @@ import styled from "styled-components/native";
 import { View, Text } from "react-native";
 import AppText from "./AppText";
 import { AntDesign } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
+
+import firebase from "firebase/app";
 
 const Container = styled.View`
   width: 100%;
@@ -33,7 +35,25 @@ const ActionBarLeft = styled.View`
   justify-content: space-between;
 `;
 
-const ArticleItem = ({ title, details, like, postTime }) => {
+const ArticleItem = ({ title, details, like, user, navigation }) => {
+  const firestore = firebase.firestore();
+
+  const addToBookMark = async () => {
+    if (user) {
+      try {
+        firestore.collection("bookmarks").doc().set({
+          title,
+          details,
+          like,
+        });
+      } catch (e) {
+        alert("Error adding document: ", e);
+      }
+    } else {
+      navigation.navigate("Login");
+    }
+  };
+
   return (
     <Container>
       <View
@@ -103,7 +123,13 @@ const ArticleItem = ({ title, details, like, postTime }) => {
               </AppText>
             </View>
           </ActionBarLeft>
-          <Feather name="bookmark" size={20} color="black" />
+
+          <Feather
+            name="bookmark"
+            size={20}
+            color="black"
+            onPress={() => addToBookMark()}
+          />
         </ActionBar>
       </Details>
     </Container>
